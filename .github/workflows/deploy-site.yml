@@ -1,0 +1,29 @@
+name: Deploy Site to Puter
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+
+jobs:
+  deploy-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install and build
+        working-directory: site
+        run: |
+          npm ci
+          npm run build
+      - name: Deploy website
+        uses: HeyPuter/puter-subdomain-deploy-action@v1.0.6
+        with:
+          subdomain: lab-react
+          puter_path: ~/Sites/lab-react/
+          source_path: site/dist
+          puter_token: ${{ secrets.PUTER_AUTH_TOKEN }}

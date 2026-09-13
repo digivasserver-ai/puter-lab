@@ -1,0 +1,21 @@
+name: Deploy Worker to Puter
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worker/**'
+
+jobs:
+  deploy-worker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy worker
+        uses: HeyPuter/puter-worker-deploy-action@v1.0.1
+        with:
+          worker_name: lab-hello
+          puter_path: ~/Workers/hello/
+          source_path: worker
+          entry_file: hello.js
+          puter_token: ${{ secrets.PUTER_AUTH_TOKEN }}
