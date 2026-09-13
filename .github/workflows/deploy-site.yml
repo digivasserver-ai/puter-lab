@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - 'site/**'
+  workflow_run:
+    workflows: [Deploy Worker to Puter]
+    types: [completed]
+    branches: [main]
 
 jobs:
   deploy-site:
@@ -20,6 +24,8 @@ jobs:
         run: |
           npm ci
           npm run build
+      - name: Sleep for Puter rate limit
+        run: sleep 20
       - name: Deploy website
         uses: HeyPuter/puter-subdomain-deploy-action@v1.0.6
         with:
